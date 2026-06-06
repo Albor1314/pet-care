@@ -18,10 +18,26 @@ function getTomorrowInBeijing() {
   return formatDateFromUTC(beijingDate);
 }
 
+function formatBeijingDateTime(date: Date) {
+  const beijingDate = new Date(date.getTime() + BEIJING_UTC_OFFSET_MS);
+  const yyyy = beijingDate.getUTCFullYear();
+  const mm = String(beijingDate.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(beijingDate.getUTCDate()).padStart(2, "0");
+  const hh = String(beijingDate.getUTCHours()).padStart(2, "0");
+  const min = String(beijingDate.getUTCMinutes()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+}
+
+function buildExpectedArrivalAtBeijing(date: string, time: string) {
+  return date && time ? `${date}T${time}` : "";
+}
+
 export default function BookingForm() {
   const [minimumDate, setMinimumDate] = useState("");
   const [bookingDate, setBookingDate] = useState("");
   const [arrivalTime, setArrivalTime] = useState(DEFAULT_ARRIVAL_TIME);
+  const [beijingNow, setBeijingNow] = useState("");
+  const [expectedArrivalAtBeijing, setExpectedArrivalAtBeijing] = useState("");
   const [formKey, setFormKey] = useState(0);
   const [toastVisible, setToastVisible] = useState(false);
 
@@ -31,6 +47,8 @@ export default function BookingForm() {
     setMinimumDate(defaultBookingDate);
     setBookingDate(defaultBookingDate);
     setArrivalTime(DEFAULT_ARRIVAL_TIME);
+    setBeijingNow(formatBeijingDateTime(new Date()));
+    setExpectedArrivalAtBeijing(buildExpectedArrivalAtBeijing(defaultBookingDate, DEFAULT_ARRIVAL_TIME));
   }, []);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -41,8 +59,20 @@ export default function BookingForm() {
     setMinimumDate(defaultBookingDate);
     setBookingDate(defaultBookingDate);
     setArrivalTime(DEFAULT_ARRIVAL_TIME);
+    setBeijingNow(formatBeijingDateTime(new Date()));
+    setExpectedArrivalAtBeijing(buildExpectedArrivalAtBeijing(defaultBookingDate, DEFAULT_ARRIVAL_TIME));
     setFormKey((key) => key + 1);
     window.setTimeout(() => setToastVisible(false), 3200);
+  }
+
+  function handleBookingDateChange(value: string) {
+    setBookingDate(value);
+    setExpectedArrivalAtBeijing(buildExpectedArrivalAtBeijing(value, arrivalTime));
+  }
+
+  function handleArrivalTimeChange(value: string) {
+    setArrivalTime(value);
+    setExpectedArrivalAtBeijing(buildExpectedArrivalAtBeijing(bookingDate, value));
   }
 
   return (
@@ -82,7 +112,7 @@ export default function BookingForm() {
               type="date"
               min={minimumDate}
               value={bookingDate}
-              onChange={(event) => setBookingDate(event.target.value)}
+              onChange={(event) => handleBookingDateChange(event.target.value)}
               required
             />
           </label>
@@ -92,7 +122,18 @@ export default function BookingForm() {
               name="time"
               type="time"
               value={arrivalTime}
-              onChange={(event) => setArrivalTime(event.target.value)}
+              onChange={(event) => handleArrivalTimeChange(event.target.value)}
+              required
+            />
+          </label>
+          <label className="full">
+            期望到店时间（北京时间 UTC+8）
+            <input
+              name="expectedArrivalAtBeijing"
+              type="datetime-local"
+              min={beijingNow}
+              value={expectedArrivalAtBeijing}
+              onChange={(event) => setExpectedArrivalAtBeijing(event.target.value)}
               required
             />
           </label>
@@ -110,7 +151,7 @@ export default function BookingForm() {
       </form>
 
       <div className={`toast${toastVisible ? " show" : ""}`} role="status" aria-live="polite">
-        预约信息已收到，前台稍后会联系你确认时间。
+        预约信息已收到，前台会按北京时间记录并稍后联系你确认。
       </div>
     </>
   );
