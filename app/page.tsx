@@ -264,7 +264,8 @@ export default function Home() {
       <footer className="footer" id="location">
         <div className="shell footer-grid">
           <div className="footer-info">
-            <h2>泡泡尾巴 PET SPA</h2>
+            <h2>门店信息</h2>
+            <h3>泡泡尾巴 PET SPA</h3>
             <div className="contact">
               <span>地址：上海市陕西北路 1620 号</span>
               <span>营业时间：周一至周日 10:00 - 20:00</span>

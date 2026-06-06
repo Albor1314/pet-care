@@ -997,18 +997,21 @@
 
     .footer-grid {
       display: grid;
-      grid-template-columns: minmax(230px, .9fr) minmax(250px, 1.1fr);
-      gap: 22px;
-      align-items: stretch;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
     }
 
     .footer h2 {
       font-size: clamp(26px, 3.4vw, 54px);
     }
 
+    .footer-info h3 {
+      margin: 14px 0 12px;
+      font-size: 22px;
+    }
+
     .footer-info {
       display: grid;
-      align-content: center;
       padding: 12px 0;
     }
 
@@ -1021,11 +1024,12 @@
 
     .footer-info .button {
       width: min(100%, 525px);
-      margin-top: 28px;
+      margin-top: 22px;
     }
 
     .footer-map {
-      min-height: 280px;
+      width: 100%;
+      min-height: 520px;
       box-shadow: 8px 8px 0 #142119;
     }
 
@@ -1136,6 +1140,10 @@
         min-height: 320px;
       }
 
+      .footer-map {
+        min-height: 420px;
+      }
+
       .store-pin {
         left: 58%;
         top: 44%;
@@ -1152,12 +1160,17 @@
       }
 
       .footer-grid {
-        grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
-        gap: 12px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
       }
 
       .footer h2 {
         font-size: clamp(22px, 5vw, 30px);
+      }
+
+      .footer-info h3 {
+        margin: 10px 0 10px;
+        font-size: 18px;
       }
 
       .contact {
@@ -1171,7 +1184,7 @@
       }
 
       .footer-map {
-        min-height: 250px;
+        min-height: 360px;
         box-shadow: 5px 5px 0 #142119;
       }
 
