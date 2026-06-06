@@ -2,25 +2,45 @@
 
 import { FormEvent, useEffect, useState } from "react";
 
-function formatDate(date: Date) {
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const dd = String(date.getDate()).padStart(2, "0");
+const BEIJING_UTC_OFFSET_MS = 8 * 60 * 60 * 1000;
+const DEFAULT_ARRIVAL_TIME = "09:30";
+
+function formatDateFromUTC(date: Date) {
+  const yyyy = date.getUTCFullYear();
+  const mm = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(date.getUTCDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
 }
 
+function getTomorrowInBeijing() {
+  const beijingDate = new Date(Date.now() + BEIJING_UTC_OFFSET_MS);
+  beijingDate.setUTCDate(beijingDate.getUTCDate() + 1);
+  return formatDateFromUTC(beijingDate);
+}
+
 export default function BookingForm() {
-  const [today, setToday] = useState("");
+  const [minimumDate, setMinimumDate] = useState("");
+  const [bookingDate, setBookingDate] = useState("");
+  const [arrivalTime, setArrivalTime] = useState(DEFAULT_ARRIVAL_TIME);
   const [formKey, setFormKey] = useState(0);
   const [toastVisible, setToastVisible] = useState(false);
 
   useEffect(() => {
-    setToday(formatDate(new Date()));
+    const defaultBookingDate = getTomorrowInBeijing();
+
+    setMinimumDate(defaultBookingDate);
+    setBookingDate(defaultBookingDate);
+    setArrivalTime(DEFAULT_ARRIVAL_TIME);
   }, []);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const defaultBookingDate = getTomorrowInBeijing();
+
     setToastVisible(true);
+    setMinimumDate(defaultBookingDate);
+    setBookingDate(defaultBookingDate);
+    setArrivalTime(DEFAULT_ARRIVAL_TIME);
     setFormKey((key) => key + 1);
     window.setTimeout(() => setToastVisible(false), 3200);
   }
@@ -57,11 +77,24 @@ export default function BookingForm() {
           </label>
           <label>
             预约日期
-            <input name="date" type="date" min={today} defaultValue={today} required />
+            <input
+              name="date"
+              type="date"
+              min={minimumDate}
+              value={bookingDate}
+              onChange={(event) => setBookingDate(event.target.value)}
+              required
+            />
           </label>
           <label>
             到店时间
-            <input name="time" type="time" required />
+            <input
+              name="time"
+              type="time"
+              value={arrivalTime}
+              onChange={(event) => setArrivalTime(event.target.value)}
+              required
+            />
           </label>
           <label className="full">
             特殊情况
