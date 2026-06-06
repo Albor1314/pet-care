@@ -1,6 +1,91 @@
 import BookingForm from "@/components/BookingForm";
 import InteriorCarousel from "@/components/InteriorCarousel";
 
+const customerReviews = [
+  {
+    quote: "我家狗狗怕吹风，护理师会先让它熟悉声音，再分段吹干，回家一点都没有应激。",
+    author: "豆豆主人",
+    service: "基础香香洗",
+    tag: "怕吹风友好",
+  },
+  {
+    quote: "猫咪第一次在外面洗澡，本来很担心。店里会发过程照片，洗完爪垫和耳朵都很干净。",
+    author: "年糕主人",
+    service: "猫咪安静洗",
+    tag: "猫咪安静护理",
+  },
+  {
+    quote: "修剪前会认真问生活习惯，不是直接照模板剪。夏天这个长度刚刚好，散步也清爽。",
+    author: "可乐主人",
+    service: "造型修剪",
+    tag: "按需造型",
+  },
+  {
+    quote: "以前洗完毛会炸开，这次护理师帮忙做了打结处理，还教我回家怎么梳毛。",
+    author: "糯米主人",
+    service: "毛发护理",
+    tag: "打结处理",
+  },
+  {
+    quote: "预约时间很准，到店不用久等。玻璃窗能看到护理区，主人在外面也比较安心。",
+    author: "Lucky 主人",
+    service: "小型犬洗护",
+    tag: "准时透明",
+  },
+  {
+    quote: "我家小狗皮肤敏感，店员先检查皮肤状态，再换了温和洗剂，洗完没有抓挠。",
+    author: "芝麻主人",
+    service: "敏感肌洗护",
+    tag: "皮肤检查",
+  },
+];
+
+function CustomerReviews() {
+  const scrollingReviews = [...customerReviews, ...customerReviews];
+
+  return (
+    <section className="section reviews-section" id="reviews">
+      <div className="shell">
+        <div className="section-head">
+          <h2>客户评价</h2>
+          <p className="section-note">洗完不是结束，回家蓬松、稳定、愿意再来，才算真的护理到位。</p>
+        </div>
+
+        <div className="review-showcase">
+          <div className="review-photo">
+            <img
+              src="https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?auto=format&fit=crop&w=1200&q=85"
+              alt="被抱着的干净小狗"
+            />
+            <div className="review-score" aria-label="附近社区主人评分 4.9 分">
+              <strong>4.9</strong>
+              <span>附近社区主人评分</span>
+            </div>
+          </div>
+
+          <div className="review-marquee" aria-label="客户评价动画轮播">
+            <div className="review-track">
+              {scrollingReviews.map((review, index) => (
+                <article className="review-card" key={`${review.author}-${index}`}>
+                  <div className="review-card-top">
+                    <span>{review.tag}</span>
+                    <b>★★★★★</b>
+                  </div>
+                  <p>“{review.quote}”</p>
+                  <div className="review-author">
+                    <strong>{review.author}</strong>
+                    <span>{review.service}</span>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function MapBoard() {
   return (
     <div
@@ -65,7 +150,7 @@ export default function Home() {
           <div className="nav-links" aria-label="页面导航">
             <a href="#services">服务</a>
             <a href="#booking">预约</a>
-            <a href="#reviews">口碑</a>
+            <a href="#reviews">客户评价</a>
             <a href="#interior">环境</a>
             <a href="#location">位置</a>
             <a className="button primary" href="#booking">
@@ -218,36 +303,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="section" id="reviews">
-          <div className="shell">
-            <div className="section-head">
-              <h2>洗完不是结束，回家蓬松才算数。</h2>
-              <p className="section-note">护理师会把本次毛发打结、耳道、皮肤和指甲情况同步给主人。</p>
-            </div>
-            <div className="gallery">
-              <div className="gallery-main">
-                <img
-                  src="https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?auto=format&fit=crop&w=1200&q=85"
-                  alt="被抱着的干净小狗"
-                />
-              </div>
-              <div className="reviews">
-                <div className="quote">
-                  <p>“我家狗狗怕吹风，店员会分段安抚，洗完没有应激。”</p>
-                  <span>豆豆主人 · 基础洗护</span>
-                </div>
-                <div className="quote">
-                  <p>“猫咪第一次在外面洗澡，回来香香的，爪垫也修得很干净。”</p>
-                  <span>年糕主人 · 猫咪安静洗</span>
-                </div>
-                <div className="quote">
-                  <p>“修剪不是千篇一律，会先问生活习惯，夏天这个长度刚刚好。”</p>
-                  <span>可乐主人 · 造型修剪</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <CustomerReviews />
 
         <section className="section interior-section" id="interior">
           <div className="shell">
