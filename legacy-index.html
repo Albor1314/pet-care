@@ -1391,8 +1391,8 @@
             <label>预约日期
               <input name="date" type="date" required>
             </label>
-            <label>到店时间
-              <input name="time" type="time" required>
+            <label>到店时间（09:30–18:30）
+              <input name="time" type="time" min="09:30" max="18:30" required>
             </label>
             <label class="full">特殊情况
               <textarea name="note" placeholder="例如：怕吹风、皮肤敏感、第一次到店"></textarea>
@@ -1544,7 +1544,9 @@
     let interiorTimer;
 
     const BEIJING_UTC_OFFSET_MS = 8 * 60 * 60 * 1000;
-    const DEFAULT_ARRIVAL_TIME = '09:30';
+    const MIN_ARRIVAL_TIME = '09:30';
+    const MAX_ARRIVAL_TIME = '18:30';
+    const DEFAULT_ARRIVAL_TIME = MIN_ARRIVAL_TIME;
 
     const formatDateFromUTC = (date) => {
       const yyyy = date.getUTCFullYear();
@@ -1559,14 +1561,36 @@
       return formatDateFromUTC(beijingDate);
     };
 
+    const clampArrivalTime = (time) => {
+      if (!time) {
+        return '';
+      }
+
+      if (time < MIN_ARRIVAL_TIME) {
+        return MIN_ARRIVAL_TIME;
+      }
+
+      if (time > MAX_ARRIVAL_TIME) {
+        return MAX_ARRIVAL_TIME;
+      }
+
+      return time;
+    };
+
     const setDefaultArrival = () => {
       const defaultBookingDate = getTomorrowInBeijing();
       dateInput.min = defaultBookingDate;
       dateInput.value = defaultBookingDate;
+      timeInput.min = MIN_ARRIVAL_TIME;
+      timeInput.max = MAX_ARRIVAL_TIME;
       timeInput.value = DEFAULT_ARRIVAL_TIME;
     };
 
     setDefaultArrival();
+
+    timeInput.addEventListener('change', (event) => {
+      event.target.value = clampArrivalTime(event.target.value);
+    });
 
     form.addEventListener('submit', (event) => {
       event.preventDefault();

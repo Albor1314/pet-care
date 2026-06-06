@@ -3,7 +3,9 @@
 import { FormEvent, useEffect, useState } from "react";
 
 const BEIJING_UTC_OFFSET_MS = 8 * 60 * 60 * 1000;
-const DEFAULT_ARRIVAL_TIME = "09:30";
+const MIN_ARRIVAL_TIME = "09:30";
+const MAX_ARRIVAL_TIME = "18:30";
+const DEFAULT_ARRIVAL_TIME = MIN_ARRIVAL_TIME;
 
 function formatDateFromUTC(date: Date) {
   const yyyy = date.getUTCFullYear();
@@ -28,8 +30,39 @@ function formatBeijingDateTime(date: Date) {
   return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
 }
 
+function clampArrivalTime(time: string) {
+  if (!time) {
+    return "";
+  }
+
+  if (time < MIN_ARRIVAL_TIME) {
+    return MIN_ARRIVAL_TIME;
+  }
+
+  if (time > MAX_ARRIVAL_TIME) {
+    return MAX_ARRIVAL_TIME;
+  }
+
+  return time;
+}
+
 function buildExpectedArrivalAtBeijing(date: string, time: string) {
-  return date && time ? `${date}T${time}` : "";
+  const safeTime = clampArrivalTime(time);
+  return date && safeTime ? `${date}T${safeTime}` : "";
+}
+
+function buildExpectedArrivalBoundary(date: string, time: string) {
+  return date ? `${date}T${time}` : "";
+}
+
+function clampExpectedArrivalAtBeijing(dateTime: string) {
+  const [date, time] = dateTime.split("T");
+
+  if (!date || !time) {
+    return dateTime;
+  }
+
+  return `${date}T${clampArrivalTime(time)}`;
 }
 
 export default function BookingForm() {
@@ -71,8 +104,21 @@ export default function BookingForm() {
   }
 
   function handleArrivalTimeChange(value: string) {
-    setArrivalTime(value);
-    setExpectedArrivalAtBeijing(buildExpectedArrivalAtBeijing(bookingDate, value));
+    const safeArrivalTime = clampArrivalTime(value);
+
+    setArrivalTime(safeArrivalTime);
+    setExpectedArrivalAtBeijing(buildExpectedArrivalAtBeijing(bookingDate, safeArrivalTime));
+  }
+
+  function handleExpectedArrivalAtBeijingChange(value: string) {
+    const safeExpectedArrivalAtBeijing = clampExpectedArrivalAtBeijing(value);
+    const [, safeArrivalTime] = safeExpectedArrivalAtBeijing.split("T");
+
+    setExpectedArrivalAtBeijing(safeExpectedArrivalAtBeijing);
+
+    if (safeArrivalTime) {
+      setArrivalTime(safeArrivalTime);
+    }
   }
 
   return (
@@ -117,10 +163,12 @@ export default function BookingForm() {
             />
           </label>
           <label>
-            到店时间
+            到店时间（09:30–18:30）
             <input
               name="time"
               type="time"
+              min={MIN_ARRIVAL_TIME}
+              max={MAX_ARRIVAL_TIME}
               value={arrivalTime}
               onChange={(event) => handleArrivalTimeChange(event.target.value)}
               required
@@ -131,9 +179,10 @@ export default function BookingForm() {
             <input
               name="expectedArrivalAtBeijing"
               type="datetime-local"
-              min={beijingNow}
+              min={buildExpectedArrivalBoundary(bookingDate, MIN_ARRIVAL_TIME) || beijingNow}
+              max={buildExpectedArrivalBoundary(bookingDate, MAX_ARRIVAL_TIME)}
               value={expectedArrivalAtBeijing}
-              onChange={(event) => setExpectedArrivalAtBeijing(event.target.value)}
+              onChange={(event) => handleExpectedArrivalAtBeijingChange(event.target.value)}
               required
             />
           </label>
