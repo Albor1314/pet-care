@@ -3,8 +3,8 @@
 import { FormEvent, useEffect, useState } from "react";
 
 const BEIJING_UTC_OFFSET_MS = 8 * 60 * 60 * 1000;
-const MIN_ARRIVAL_TIME = "09:30";
-const MAX_ARRIVAL_TIME = "18:30";
+const MIN_ARRIVAL_TIME = "08:30";
+const MAX_ARRIVAL_TIME = "19:00";
 const DEFAULT_ARRIVAL_TIME = MIN_ARRIVAL_TIME;
 
 function formatDateFromUTC(date: Date) {
@@ -163,7 +163,7 @@ export default function BookingForm() {
             />
           </label>
           <label>
-            到店时间（09:30–18:30）
+            到店时间（08:30–19:00）
             <input
               name="time"
               type="time"

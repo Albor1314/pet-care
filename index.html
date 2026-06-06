@@ -1400,8 +1400,8 @@
             <label>预约日期
               <input name="date" type="date" required>
             </label>
-            <label>到店时间（09:30–18:30）
-              <input name="time" type="time" min="09:30" max="18:30" required>
+            <label>到店时间（08:30–19:00）
+              <input name="time" type="time" min="08:30" max="19:00" required>
             </label>
             <label class="full">特殊情况
               <textarea name="note" placeholder="例如：怕吹风、皮肤敏感、第一次到店"></textarea>
@@ -1554,8 +1554,8 @@
     let interiorTimer;
 
     const BEIJING_UTC_OFFSET_MS = 8 * 60 * 60 * 1000;
-    const MIN_ARRIVAL_TIME = '09:30';
-    const MAX_ARRIVAL_TIME = '18:30';
+    const MIN_ARRIVAL_TIME = '08:30';
+    const MAX_ARRIVAL_TIME = '19:00';
     const DEFAULT_ARRIVAL_TIME = MIN_ARRIVAL_TIME;
 
     const formatDateFromUTC = (date) => {
